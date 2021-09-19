@@ -1,6 +1,4 @@
-export default 'RT на русском	Россия,США	https://russian.rt.com/favicon.ico	https://russian.rt.com	https://russian.rt.com/rss'
-
-/* @TODO export default `
+export default `
 RT на русском	Россия,США	https://russian.rt.com/favicon.ico	https://russian.rt.com	https://russian.rt.com/rss
 Life.ru» — информационный портал	Россия	https://life.ru/favicon-96x96.png	https://life.ru/p/143648	https://life.ru/rss
 Новости дня в России и мире — РБК	Россия	https://s.rbk.ru/v10_rbcnews_static/common/common-10.8.37/images/android-chrome-512x512.png	https://www.rbc.ru	https://rssexport.rbc.ru/rbcnews/news/30/full.rss
@@ -23,4 +21,8 @@ The Village	Россия	https://www.the-village.ru/apple-touch-icon.png	https:/
 Zerkalo	Беларусь	https://news.zerkalo.io/favicon.ico	https://news.zerkalo.io	https://news.zerkalo.io/rss/all.rss
 Новости России, СНГ и мира - ИА REGNUM	Россия	https://regnum.ru/images/favicon/apple-touch-icon.png	https://regnum.ru	https://regnum.ru/rss/news.html
 Версия - новости и расследования газеты «Наша версия»	Россия	https://versia.ru/i/v314/favicons/apple-touch-icon-120x120.png	https://versia.ru	https://versia.ru/rss/index.xml
-` */
+Новости Запорожья, Украины и мира | Репортер UA	Украина	https://reporter-ua.com/sites/default/files/icon_0.jpg	https://reporter-ua.com	https://reporter-ua.com/xml_export/yandex
+Телеканал «Звезда»	Россия	https://tvzvezda.ru/assets/favicon/apple-touch-icon.png?v=e	https://tvzvezda.ru	https://tvzvezda.ru/export/rss.xml
+Новости — Meduza	Россия	https://meduza.io/favicon-64x64.png	https://meduza.io	https://meduza.io/rss2/all
+Новости Украины за последний час на Главред. Актуальные новости в мире за сегодня - Главред	Украина	https://glavred.info/favicon.ico	https://glavred.info	https://glavred.info/rss.xml
+`
