@@ -1,16 +1,18 @@
 import React, {useEffect, useState} from 'react';
 import {SafeAreaView, StyleSheet, ImageBackground, Image, ViewProps, Alert} from 'react-native';
-import {Card, Divider, Layout, List, Spinner, Text} from '@ui-kitten/components';
+import {Button, Card, Divider, Layout, List, Spinner, Text} from '@ui-kitten/components';
 import {fetchRSS, INewsItem, newsListState, sortNewsByDate} from "../../lib/News";
 import {stripTags} from "../../lib/Format";
 import {useRecoilState} from "recoil";
-import {newsSourcesState, parseAndAssignSources} from "../../lib/NewsSource";
+import {disabledSourcesState, newsSourcesState, parseAndAssignSources} from "../../lib/NewsSource";
 import {openLink} from "../../lib/Webview";
 
 export const NewsfeedScreen = () => {
     const [loaded, setLoaded] = useState(false);
     const [list, setList] = useRecoilState<Array<INewsItem>>(newsListState);
     const [sources, setSources] = useRecoilState(newsSourcesState);
+    const [needUpdate, setNeedUpdate] = useState(false);
+    const [disabled] = useRecoilState(disabledSourcesState);
 
     useEffect(() => {
         if(!sources?.length) {
@@ -20,13 +22,17 @@ export const NewsfeedScreen = () => {
             console.log('Parsing news from ' + sources?.length + ' sources');
 
             Promise.all(sources.map((i) => {
+                if(disabled?.indexOf(i.url) >= 0) {
+                    return null;
+                }
+
                 return fetchRSS(i.rss).catch(e => {
                     Alert.alert(
                         "Невозможно прочитать '" + i.title + "'",
                         e.toString(),
                     );
                 })
-            })).then((r) => {
+            }).filter(i => i !== null)).then((r) => {
                 if(!r?.length) {
                     setLoaded(true);
                     return;
@@ -34,12 +40,20 @@ export const NewsfeedScreen = () => {
 
                 // @ts-ignore
                 setList(sortNewsByDate(r.flat()));
+                setNeedUpdate(false);
                 setLoaded(true);
             });
         }
-    }, [sources]);
+    }, [sources, list]);
 
-    // info?.item?.source?.image
+    useEffect(() => {
+        /**
+         * Выводить плашку только если что-то поменялось уже после загрузки
+         */
+        if(disabled?.length && list?.length) {
+            setNeedUpdate(true);
+        }
+    }, [disabled]);
 
     const renderItemHeader = (headerProps: ViewProps | undefined, info: any) => (
         <ImageBackground
@@ -77,11 +91,17 @@ export const NewsfeedScreen = () => {
             <Layout style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                 {(!loaded) && <Spinner size='giant'/>}
                 {(loaded && !list.length) && <Text category='h3'>Новостей нет 😔</Text>}
-                {(loaded && list.length > 0) && <List
-                    contentContainerStyle={styles.contentContainer}
-                    data={list} style={{width: '100%'}}
-                    renderItem={renderItem}
-                />}
+                {(loaded && list.length > 0) && <React.Fragment>
+                    {needUpdate && <Button appearance='outline' onPress={() => setList([])} style={{margin: 5}}>
+                        Обновить список новостей
+                    </Button>}
+
+                    <List
+                        contentContainerStyle={styles.contentContainer}
+                        data={list} style={{width: '100%'}}
+                        renderItem={renderItem}
+                    />
+                </React.Fragment>}
             </Layout>
         </SafeAreaView>
     );

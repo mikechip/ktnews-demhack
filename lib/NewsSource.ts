@@ -14,6 +14,11 @@ export const newsSourcesState = atom({
     default: [] as INewsSource[]
 });
 
+export const disabledSourcesState = atom({
+    key: 'disabled_sources',
+    default: [] as string[]
+});
+
 /**
  * Прочитать список предустановленных СМИ из файла и внести в БД, если их там ещё нет
  */

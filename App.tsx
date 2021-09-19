@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Alert, LogBox} from 'react-native';
 import * as eva from '@eva-design/eva';
 import { ApplicationProvider, IconRegistry} from '@ui-kitten/components';
@@ -7,12 +7,18 @@ import {AppNavigator} from "./components/Navigation";
 import { ThemeContext } from './components/ThemeContext';
 import {parseAndAssignSources} from "./lib/NewsSource";
 import {RecoilRoot} from 'recoil';
+import AppLoading from 'expo-app-loading';
 
 LogBox.ignoreLogs(['Setting a timer']);
 
 export default () => {
+    const [ready, setReady] = useState(false);
+
     useEffect(() => {
-        parseAndAssignSources().then(r => console.log('Application ready')).catch(e => {
+        parseAndAssignSources().then(() => {
+            console.log('Application ready');
+            setReady(true);
+        }).catch(e => {
             Alert.alert(
                 "Ошибка инициализации",
                 e.toString(),
@@ -26,6 +32,12 @@ export default () => {
         const nextTheme = theme === 'light' ? 'dark' : 'light';
         setTheme(nextTheme);
     };
+
+    if(!ready) {
+        return (
+            <AppLoading />
+        );
+    }
 
     return <>
         <IconRegistry icons={EvaIconsPack}/>
